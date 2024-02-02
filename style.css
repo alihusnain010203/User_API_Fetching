@@ -53,8 +53,7 @@ background-color: white;
  top: 10%;
  left: 25%;
  width: 50%;
- 
- height: 50%;
+height: fit-content;
  padding: 30px;
 }
 .btn{
@@ -63,7 +62,6 @@ background-color: white;
   padding: 5px;
 
 }
-
 p{
-  padding: 2px;
+  padding: 1.5px;
 }
