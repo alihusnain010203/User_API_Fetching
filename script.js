@@ -19,7 +19,7 @@ const updateDisplay = () => {
               <td>${user.phone}</td>
               <td>${user.website}</td>
               <td>${user.company.name}</td>
-              <td><button onclick="viewDetails(${user.id})">View Details</button></td>`;
+              <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>`;
     tr.innerHTML = html;
     tbody.appendChild(tr);
   });
@@ -39,7 +39,7 @@ const fetchData = async () => {
              <td>${user.phone}</td>
              <td>${user.website}</td>
              <td>${user.company.name}</td>
-             <td><button onclick="viewDetails(${user.id})">View Details</button></td>`;
+             <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>`;
 
     tr.innerHTML = html;
     tbody.appendChild(tr);
@@ -58,8 +58,8 @@ async function viewDetails(userId) {
 <p>Website: ${userData.website}</p>
 <p>Company: ${userData.company.name}</p>
 <p>Address: ${userData.address.street}, ${userData.address.suite}, ${userData.address.city}, ${userData.address.zipcode}</p>
-<button onclick="editRecord(${userId})">Edit</button>
-<button onclick="closeDialog()">Close</button>`;
+<button class="btn" onclick="editRecord(${userId})">Edit</button>
+<button class="btn" onclick="closeDialog()">Close</button>`;
   dialog.innerHTML = html;
 
   dialog.removeAttribute("close");
@@ -88,8 +88,8 @@ let editRecord = (userId) => {
   <input type="text" id="company" name="company" value="${userData.company.name}"><br>
   <label for="address">Address:</label><br>
   <input type="text" id="address" name="address" value="${userData.address.street}, ${userData.address.suite}, ${userData.address.city}, ${userData.address.zipcode}"><br>
-  <button onclick="updateRecord(${userId})">Update</button>
-  <button onclick="closeDialog()">Close</button>
+  <button class="btn" onclick="updateRecord(${userId})">Update</button>
+  <button class="btn" onclick="closeDialog()">Close</button>
   `;
   dialog.innerHTML = html;
 };
@@ -113,12 +113,8 @@ let updateRecord = async (userId) => {
       email: email,
       phone: phone,
       website: website,
-      company: {
-        name: company,
-      },
-      address: {
-        street: address,
-      },
+      company: company,
+      address: address,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
