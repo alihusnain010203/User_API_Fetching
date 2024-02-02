@@ -3,13 +3,13 @@ const fetchbtn = document.querySelector(".fetch");
 const dialog = document.querySelector(".dialog");
 let tbody = document.querySelector(".table-body");
 
-let Usersdata;
+let users_Data;
 
-let userData;
+let selected_User;
 
 const updateDisplay = () => {
   tbody.innerHTML = "";
-  Usersdata.forEach((user) => {
+  users_Data.forEach((user) => {
     let tr = document.createElement("tr");
     let html = `<td>${user.id}</td>
               <td>${user.name}</td>   
@@ -19,7 +19,8 @@ const updateDisplay = () => {
               <td>${user.phone}</td>
               <td>${user.website}</td>
               <td>${user.company.name}</td>
-              <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>`;
+              <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>
+              <td><button class="btn" onclick="deleteRecord(${user.id})">Delete</button></td>`;
     tr.innerHTML = html;
     tbody.appendChild(tr);
   });
@@ -27,9 +28,9 @@ const updateDisplay = () => {
 
 const fetchData = async () => {
   const data = await fetch(URL);
-  Usersdata = await data.json();
+  users_Data = await data.json();
 
-  Usersdata.forEach((user) => {
+  users_Data.forEach((user) => {
     let tr = document.createElement("tr");
     let html = `<td>${user.id}</td>
              <td>${user.name}</td>
@@ -39,7 +40,9 @@ const fetchData = async () => {
              <td>${user.phone}</td>
              <td>${user.website}</td>
              <td>${user.company.name}</td>
-             <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>`;
+             <td><button class="btn" onclick="viewDetails(${user.id})">View Details</button></td>
+             <td><button class="btn" onclick="deleteRecord(${user.id})">Delete</button></td>
+             `;
 
     tr.innerHTML = html;
     tbody.appendChild(tr);
@@ -48,16 +51,26 @@ const fetchData = async () => {
 
 fetchbtn.addEventListener("click", fetchData);
 
+async function deleteRecord(userId) {
+  await fetch(`${URL}${userId}`, {
+    method: "DELETE",
+  });
+
+  users_Data.splice(userId - 1, 1);
+
+  updateDisplay();
+}
+
 async function viewDetails(userId) {
   const response = await fetch(`${URL}${userId}`);
-  userData = await response.json();
-  let html = `<h2>${userData.name}</h2>
-<p>Username: ${userData.username}</p>
-<p>Email: ${userData.email}</p>
-<p>Phone: ${userData.phone}</p>
-<p>Website: ${userData.website}</p>
-<p>Company: ${userData.company.name}</p>
-<p>Address: ${userData.address.street}, ${userData.address.suite}, ${userData.address.city}, ${userData.address.zipcode}</p>
+  selected_User = await response.json();
+  let html = `<h2>${selected_User.name}</h2>
+<p>Username: ${selected_User.username}</p>
+<p>Email: ${selected_User.email}</p>
+<p>Phone: ${selected_User.phone}</p>
+<p>Website: ${selected_User.website}</p>
+<p>Company: ${selected_User.company.name}</p>
+<p>Address: ${selected_User.address.street}, ${selected_User.address.suite}, ${selected_User.address.city}, ${selected_User.address.zipcode}</p>
 <button class="btn" onclick="editRecord(${userId})">Edit</button>
 <button class="btn" onclick="closeDialog()">Close</button>`;
   dialog.innerHTML = html;
@@ -75,19 +88,19 @@ let editRecord = (userId) => {
   let html = `<h2>Edit User</h2>
 <form>
   <label for="name">Name:</label><br>
-  <input type="text" id="name" name="name" value="${userData.name}"><br>
+  <input type="text" id="name" name="name" value="${selected_User.name}"><br>
   <label for="username">Username:</label><br>
-  <input type="text" id="username" name="username" value="${userData.username}"><br>
+  <input type="text" id="username" name="username" value="${selected_User.username}"><br>
   <label for="email">Email:</label><br>
-  <input type="text" id="email" name="email" value="${userData.email}"><br>
+  <input type="text" id="email" name="email" value="${selected_User.email}"><br>
   <label for="phone">Phone:</label><br>
-  <input type="text" id="phone" name="phone" value="${userData.phone}"><br>
+  <input type="text" id="phone" name="phone" value="${selected_User.phone}"><br>
   <label for="website">Website:</label><br>
-  <input type="text" id="website" name="website" value="${userData.website}"><br>
+  <input type="text" id="website" name="website" value="${selected_User.website}"><br>
   <label for="company">Company:</label><br>
-  <input type="text" id="company" name="company" value="${userData.company.name}"><br>
+  <input type="text" id="company" name="company" value="${selected_User.company.name}"><br>
   <label for="address">Address:</label><br>
-  <input type="text" id="address" name="address" value="${userData.address.street}, ${userData.address.suite}, ${userData.address.city}, ${userData.address.zipcode}"><br>
+  <input type="text" id="address" name="address" value="${selected_User.address.street}, ${selected_User.address.suite}, ${selected_User.address.city}, ${selected_User.address.zipcode}"><br>
   <button class="btn" onclick="updateRecord(${userId})">Update</button>
   <button class="btn" onclick="closeDialog()">Close</button>
   `;
@@ -121,13 +134,13 @@ let updateRecord = async (userId) => {
     },
   });
 
-  Usersdata[userId - 1].name = name;
-  Usersdata[userId - 1].username = username;
-  Usersdata[userId - 1].email = email;
-  Usersdata[userId - 1].phone = phone;
-  Usersdata[userId - 1].website = website;
-  Usersdata[userId - 1].company.name = company;
-  Usersdata[userId - 1].address.street = address;
+  users_Data[userId - 1].name = name;
+  users_Data[userId - 1].username = username;
+  users_Data[userId - 1].email = email;
+  users_Data[userId - 1].phone = phone;
+  users_Data[userId - 1].website = website;
+  users_Data[userId - 1].company.name = company;
+  users_Data[userId - 1].address.street = address;
 
   updateDisplay();
 
